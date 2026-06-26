@@ -300,11 +300,31 @@
 
   /* ── MOBILE ── */
   @media (max-width: 600px) {
-    #lotaro-hub .lh-nav ul { flex-wrap: wrap; }
-    #lotaro-hub .lh-nav a { padding: 12px 14px; font-size: 13px; }
+    #lotaro-hub { overflow-x: hidden; }
+    
+    /* Nav: scrollbar statt umbrechen */
+    #lotaro-hub .lh-nav ul { 
+      flex-wrap: nowrap; 
+      overflow-x: auto; 
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      justify-content: flex-start;
+      padding: 0 8px;
+    }
+    #lotaro-hub .lh-nav ul::-webkit-scrollbar { display: none; }
+    #lotaro-hub .lh-nav a { 
+      padding: 14px 12px; 
+      font-size: 13px; 
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Kacheln: eine Spalte statt zwei */
+    #lotaro-hub .lh-quick-links { grid-template-columns: 1fr; }
+    
     #lotaro-hub .lh-header h1 { font-size: 24px; }
-    #lotaro-hub .lh-quick-links { grid-template-columns: 1fr 1fr; }
     #lotaro-hub .lh-input-grid { grid-template-columns: 1fr; }
+    #lotaro-hub .lh-main { padding: 24px 16px 60px; }
   }
 </style>
 </head>
