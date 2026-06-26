@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOTARO Trainer Hub</title>
+<style>
+  /* ── RESET – scoped so Webflow styles don't leak in ── */
+  #lotaro-hub * { box-sizing: border-box; margin: 0; padding: 0; }
+  #lotaro-hub { 
+    --green-dark: #2d5a4f;
+    --green-mid: #3d7a6a;
+    --green-light: #e8f0ee;
+    --text: #1a1a1a;
+    --text-muted: #5a6a66;
+    --white: #ffffff;
+    --bg: #f5f7f6;
+    --border: #d0ddd9;
+    --radius: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  #lotaro-hub .lh-header {
+    background: var(--green-dark);
+    color: var(--white);
+    padding: 48px 24px 40px;
+    text-align: center;
+  }
+  #lotaro-hub .lh-logo {
+    display: inline-block;
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 50px;
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    opacity: 0.9;
+    color: white;
+  }
+  #lotaro-hub .lh-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: white;
+  }
+  #lotaro-hub .lh-header p {
+    font-size: 16px;
+    opacity: 0.8;
+    max-width: 500px;
+    margin: 0 auto;
+    color: white;
+  }
+
+  /* ── NAV ── */
+  #lotaro-hub .lh-nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+  #lotaro-hub .lh-nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  #lotaro-hub .lh-nav a {
+    display: block;
+    padding: 16px 20px;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  #lotaro-hub .lh-nav a:hover,
+  #lotaro-hub .lh-nav a.active {
+    color: var(--green-dark);
+    border-bottom-color: var(--green-dark);
+  }
+
+  /* ── MAIN ── */
+  #lotaro-hub .lh-main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── SECTIONS ── */
+  #lotaro-hub .lh-section { display: none; }
+  #lotaro-hub .lh-section.active { display: block; }
+
+  /* ── QUICK LINKS ── */
+  #lotaro-hub .lh-quick-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+  #lotaro-hub .lh-quick-link {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.2s;
+    font-weight: 500;
+    font-size: 15px;
+  }
+  #lotaro-hub .lh-quick-link:hover {
+    border-color: var(--green-mid);
+    background: var(--green-light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(45,90,79,0.12);
+  }
+  #lotaro-hub .lh-icon {
+    width: 40px; height: 40px;
+    background: var(--green-light);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  #lotaro-hub .lh-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 400;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* ── CARDS ── */
+  #lotaro-hub .lh-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+  #lotaro-hub .lh-card-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+  }
+  #lotaro-hub .lh-card h2 { font-size: 18px; font-weight: 600; color: var(--green-dark); }
+  #lotaro-hub .lh-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+  #lotaro-hub .lh-card p { font-size: 15px; color: var(--text-muted); margin-bottom: 12px; }
+  #lotaro-hub .lh-card p:last-child { margin-bottom: 0; }
+
+  /* ── STEPS ── */
+  #lotaro-hub .lh-steps { counter-reset: step; list-style: none; }
+  #lotaro-hub .lh-steps li {
+    counter-increment: step;
+    display: flex; gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  #lotaro-hub .lh-steps li:last-child { border-bottom: none; }
+  #lotaro-hub .lh-steps li::before {
+    content: counter(step);
+    min-width: 32px; height: 32px;
+    background: var(--green-dark); color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; flex-shrink: 0;
+  }
+  #lotaro-hub .lh-step-content h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  #lotaro-hub .lh-step-content p { font-size: 14px; color: var(--text-muted); margin: 0; }
+
+  /* ── ALERT ── */
+  #lotaro-hub .lh-alert {
+    background: #fff8e1; border: 1.5px solid #f0c040;
+    border-radius: var(--radius); padding: 18px 20px;
+    font-size: 14px; margin-bottom: 20px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+
+  /* ── RICHTLINIEN ── */
+  #lotaro-hub .lh-richtlinie {
+    border-left: 3px solid var(--green-mid);
+    padding: 14px 18px; margin-bottom: 14px;
+    background: var(--white);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  #lotaro-hub .lh-richtlinie h4 { font-size: 14px; font-weight: 600; color: var(--green-dark); margin-bottom: 4px; }
+  #lotaro-hub .lh-richtlinie p { font-size: 14px; color: var(--text-muted); margin: 0; }
+
+  /* ── CONFIRM BOX ── */
+  #lotaro-hub .lh-confirm-box {
+    background: var(--green-light); border: 2px solid var(--green-mid);
+    border-radius: var(--radius); padding: 28px; margin-top: 32px; text-align: center;
+  }
+  #lotaro-hub .lh-confirm-box h3 { font-size: 18px; font-weight: 600; color: var(--green-dark); margin-bottom: 8px; }
+  #lotaro-hub .lh-confirm-box > p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+
+  #lotaro-hub .lh-input-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;
+  }
+  #lotaro-hub .lh-field label {
+    display: block; font-size: 13px; font-weight: 600;
+    color: var(--green-dark); margin-bottom: 6px; text-align: left;
+  }
+  #lotaro-hub .lh-field input {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 14px; outline: none; transition: border-color 0.2s;
+    font-family: inherit; background: white;
+  }
+  #lotaro-hub .lh-field input:focus { border-color: var(--green-mid); }
+
+  #lotaro-hub .lh-checkbox-row {
+    display: flex; align-items: flex-start; gap: 12px; text-align: left;
+    background: white; border-radius: 10px; padding: 16px; margin-bottom: 12px;
+    border: 1.5px solid var(--border); transition: border-color 0.2s; cursor: pointer;
+  }
+  #lotaro-hub .lh-checkbox-row:hover { border-color: var(--green-mid); }
+  #lotaro-hub .lh-checkbox-row input[type=checkbox] {
+    width: 20px; height: 20px; accent-color: var(--green-dark);
+    flex-shrink: 0; margin-top: 2px; cursor: pointer;
+  }
+  #lotaro-hub .lh-checkbox-row label { font-size: 14px; color: var(--text); cursor: pointer; line-height: 1.5; }
+
+  /* ── WEBFLOW FORM OVERRIDE ── Webflow injects its own form styles; neutralize them */
+  #lotaro-hub .lh-confirm-box form { background: none; padding: 0; }
+
+  #lotaro-hub .lh-btn {
+    background: var(--green-dark); color: white; border: none;
+    border-radius: 8px; padding: 14px 36px; font-size: 16px; font-weight: 600;
+    cursor: pointer; margin-top: 16px; transition: all 0.2s; width: 100%;
+    font-family: inherit;
+  }
+  #lotaro-hub .lh-btn:hover:not(:disabled) { background: var(--green-mid); transform: translateY(-1px); }
+  #lotaro-hub .lh-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ── SUCCESS ── */
+  #lotaro-hub .lh-success {
+    display: none; text-align: center; padding: 32px;
+    background: white; border-radius: var(--radius);
+    border: 2px solid #4caf50; margin-top: 20px;
+  }
+  #lotaro-hub .lh-success .lh-check { font-size: 48px; margin-bottom: 12px; }
+  #lotaro-hub .lh-success h3 { font-size: 20px; font-weight: 600; color: #2e7d32; margin-bottom: 8px; }
+  #lotaro-hub .lh-success p { color: var(--text-muted); font-size: 14px; }
+
+  /* ── SECTION INTRO ── */
+  #lotaro-hub .lh-intro { margin-bottom: 32px; }
+  #lotaro-hub .lh-intro h2 { font-size: 24px; font-weight: 700; color: var(--green-dark); margin-bottom: 8px; }
+  #lotaro-hub .lh-intro p { font-size: 15px; color: var(--text-muted); }
+
+  /* ── TAG ── */
+  #lotaro-hub .lh-tag {
+    display: inline-block; background: var(--green-light); color: var(--green-dark);
+    font-size: 12px; font-weight: 600; padding: 3px 10px;
+    border-radius: 20px; margin-bottom: 12px;
+  }
+
+  /* ── CTA BUTTON ── */
+  #lotaro-hub .lh-cta {
+    display: inline-block; background: var(--green-dark); color: white;
+    text-decoration: none; padding: 16px 40px; border-radius: 10px;
+    font-size: 16px; font-weight: 600; transition: all 0.2s;
+  }
+  #lotaro-hub .lh-cta:hover { background: var(--green-mid); }
+  #lotaro-hub .lh-cta-secondary {
+    display: inline-block; background: var(--green-light); color: var(--green-dark);
+    text-decoration: none; padding: 12px 24px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; border: 1.5px solid var(--border);
+    transition: all 0.2s;
+  }
+  #lotaro-hub .lh-cta-secondary:hover { border-color: var(--green-mid); }
+
+  /* ── FAQ ── */
+  #lotaro-hub .lh-faq-item { border-bottom: 1px solid var(--border); }
+  #lotaro-hub .lh-faq-q {
+    width: 100%; background: none; border: none; text-align: left;
+    padding: 16px 0; font-size: 15px; font-weight: 600; color: var(--text);
+    cursor: pointer; display: flex; justify-content: space-between;
+    align-items: center; gap: 12px; font-family: inherit;
+  }
+  #lotaro-hub .lh-faq-q:hover { color: var(--green-dark); }
+  #lotaro-hub .lh-faq-arrow { font-size: 12px; transition: transform 0.2s; color: var(--text-muted); flex-shrink:0; }
+  #lotaro-hub .lh-faq-arrow.open { transform: rotate(180deg); }
+  #lotaro-hub .lh-faq-a {
+    max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
+    font-size: 14px; color: var(--text-muted); line-height: 1.7;
+  }
+  #lotaro-hub .lh-faq-a.open { max-height: 600px; padding-bottom: 16px; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 600px) {
+    #lotaro-hub .lh-nav ul { flex-wrap: wrap; }
+    #lotaro-hub .lh-nav a { padding: 12px 14px; font-size: 13px; }
+    #lotaro-hub .lh-header h1 { font-size: 24px; }
+    #lotaro-hub .lh-quick-links { grid-template-columns: 1fr 1fr; }
+    #lotaro-hub .lh-input-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="lotaro-hub">
+
+  <!-- HEADER -->
+  <div class="lh-header">
+    <div class="lh-logo">LOTARO</div>
+    <h1>Trainer Hub 🎓</h1>
+    <p>Alles, was du als Trainer bei LOTARO brauchst – auf einen Blick.</p>
+  </div>
+
+  <!-- NAV -->
+  <nav class="lh-nav">
+    <ul>
+      <li><a class="active" onclick="lhTab('start', this)">🚀 Start</a></li>
+      <li><a onclick="lhTab('roadmap', this)">🗺 Roadmap</a></li>
+      <li><a onclick="lhTab('richtlinien', this)">📋 Richtlinien</a></li>
+      <li><a onclick="lhTab('faq', this)">❓ FAQ</a></li>
+      <li><a onclick="lhTab('karte', this)">📍 Trainer-Karte</a></li>
+      <li><a onclick="lhTab('fragen', this)">📬 Kontakt</a></li>
+    </ul>
+  </nav>
+
+  <div class="lh-main">
+
+    <!-- ═══ START ═══ -->
+    <div id="lh-start" class="lh-section active">
+      <div class="lh-intro">
+        <h2>Willkommen bei LOTARO 👋</h2>
+        <p>Schön, dass du dabei bist! Hier findest du die wichtigsten Links und Infos für deinen Start.</p>
+      </div>
+
+      <div class="lh-quick-links">
+        <a class="lh-quick-link" href="https://docs.google.com/forms/d/e/1FAIpQLScioJopaQnoJVbC_NrvkrwGlH0cNHqicKDPr8uDh3j-U0y_GA/viewform" target="_blank">
+          <div class="lh-icon">✏️</div>
+          <div><span class="lh-label">Schnelllink</span>Training einreichen</div>
+        </a>
+        <a class="lh-quick-link" href="https://platform.lotaro.de/w/upcoming/" target="_blank">
+          <div class="lh-icon">💻</div>
+          <div><span class="lh-label">Schnelllink</span>LOTARO Plattform</div>
+        </a>
+        <a class="lh-quick-link" href="#" onclick="lhTab('fragen', document.querySelectorAll('#lotaro-hub .lh-nav a')[4]); return false;">
+          <div class="lh-icon">✉️</div>
+          <div><span class="lh-label">Kontakt</span>Kontakt & Kommunikation</div>
+        </a>
+        <a class="lh-quick-link" href="https://chat.whatsapp.com/EsAAAfsohvEHPBkT59INZ1" target="_blank">
+          <div class="lh-icon">💬</div>
+          <div><span class="lh-label">Community</span>WhatsApp Gruppe</div>
+        </a>
+      </div>
+
+      <div class="lh-alert">
+        <span style="font-size:20px; flex-shrink:0;">⚠️</span>
+        <div><strong>Zoom-Einstellung nicht vergessen:</strong> Aktiviere "Allow participants to join via browser" in deinen Zoom-Settings → Settings → "Browser" suchen → Checkbox aktivieren.</div>
+      </div>
+
+      <div class="lh-card">
+        <div class="lh-card-header">
+          <span style="font-size:22px;">💡</span>
+          <h2>So funktioniert die Zusammenarbeit</h2>
+        </div>
+        <p>Du arbeitest <strong>selbstständig</strong> und stellst nach jedem Training eine Rechnung. Kein fester Vertrag – du entscheidest flexibel, wie viele Trainings du übernimmst.</p>
+        <p>Die Kommunikation mit Teilnehmern (vor & nach dem Training) übernehmen wir. Du kümmerst dich um das Training selbst.</p>
+        <p><strong>Abrechnung:</strong> Nach dem Training Rechnung mit vereinbartem Honorar → Auszahlung alle 14 Tage.</p>
+      </div>
+
+      <div class="lh-card">
+        <div class="lh-card-header">
+          <span style="font-size:22px;">🤝</span>
+          <h2>Empfehlungen – für beide Seiten</h2>
+        </div>
+        <p><strong>Trainer empfehlen:</strong> Kennst du jemanden, der perfekt zu LOTARO passen würde? Schreib uns – wir sprechen gerne mit ihnen.</p>
+        <p><strong>Kunden empfehlen:</strong> Wenn du uns einem deiner Kunden vorstellst und eine Partnerschaft entsteht, erhältst du eine attraktive Vergütung.</p>
+      </div>
+    </div>
+
+    <!-- ═══ ROADMAP ═══ -->
+    <div id="lh-roadmap" class="lh-section">
+      <div class="lh-intro">
+        <h2>Trainer Roadmap 🗺</h2>
+        <p>Schritt für Schritt zum erfolgreichen Training bei LOTARO.</p>
+      </div>
+
+      <div class="lh-card">
+        <div class="lh-tag">Phase 1</div>
+        <h3>Onboarding & Einrichtung</h3>
+        <ol class="lh-steps">
+          <li><div class="lh-step-content">
+            <h4>Onboarding-Formular ausfüllen</h4>
+            <p>Du hast per E-Mail ein Onboarding-Formular erhalten – dort trägst du deine persönlichen Daten, deine Vita und dein erstes Training ein. Dieser Trainer Hub ist dort ebenfalls verlinkt.</p>
+          </div></li>
+          <li><div class="lh-step-content">
+            <h4>Richtlinien bestätigen</h4>
+            <p>Lies die <a onclick="lhTab('richtlinien', document.querySelectorAll('#lotaro-hub .lh-nav a')[2])" style="color:var(--green-dark); font-weight:600; cursor:pointer;">Trainer-Richtlinien</a> und bestätige sie mit deinem Namen und deiner E-Mail.</p>
+          </div></li>
+          <li><div class="lh-step-content">
+            <h4>WhatsApp Community beitreten</h4>
+            <p>Tritt unserer <a href="https://chat.whatsapp.com/EsAAAfsohvEHPBkT59INZ1" target="_blank" style="color:var(--green-dark); font-weight:600;">"Trainers"-Gruppe</a> bei – dort laufen Updates und schnelle Kommunikation.</p>
+          </div></li>
+          <li><div class="lh-step-content">
+            <h4>Zoom einrichten</h4>
+            <p>Aktiviere "Allow participants to join via browser" in deinen Zoom-Settings → Settings → Browser suchen → Checkbox aktivieren.</p>
+          </div></li>
+          <li><div class="lh-step-content">
+            <h4>LOTARO-Plattform erkunden</h4>
+            <p>Schau dich auf <a href="https://platform.lotaro.de/w/upcoming/" target="_blank" style="color:var(--green-dark); font-weight:600;">platform.lotaro.de</a> um und mach dich mit dem Setup vertraut.</p>
+          </div></li>
+        </ol>
+      </div>
+
+      <div class="lh-card">
+        <div class="lh-tag">Phase 2</div>
+        <h3>Neues Training anlegen</h3>
+        <ol class="lh-steps">
+          <li><div class="lh-step-content">
+            <h4>Training einreichen</h4>
+            <p>Nutze das <a href="https://docs.google.com/forms/d/e/1FAIpQLScioJopaQnoJVbC_NrvkrwGlH0cNHqicKDPr8uDh3j-U0y_GA/viewform" target="_blank" style="color:var(--green-dark); font-weight:600;">Einreichungsformular</a> – alle Infos zum Training dort eintragen.</p>
+          </div></li>
+          <li><div class="lh-step-content">
+            <h4>Termin abstimmen</h4>
+            <p>Wir koordinieren die Terminplanung und kümmern uns um die Buchungen.</p>
+          </div></li>
+          <li><div class="lh-step-content">
+            <h4>Kommunikation läuft über uns</h4>
+            <p>Einladungen, Erinnerungen und Nachkommunikation mit Teilnehmern übernehmen wir vollständig.</p>
+          </div></li>
+        </ol>
+      </div>
+
+      <div class="lh-card">
+        <div class="lh-tag">Phase 3</div>
+        <h3>Best Practices fürs Training</h3>
+        <ol class="lh-steps">
+          <li><div class="lh-step-content">
+            <h4>Interaktiv gestalten</h4>
+            <p>Fragen, Gruppenarbeiten und praxisnahe Beispiele kommen am besten an. Ein guter Mix aus Theorie und Praxis ist entscheidend.</p>
+          </div></li>
+          <li><div class="lh-step-content">
+            <h4>Technische Voraussetzungen prüfen</h4>
+            <p>Stabile Internetverbindung, gute Bild- und Tonqualität, Zoom Pro Account.</p>
+          </div></li>
+          <li><div class="lh-step-content">
+            <h4>Feedback nutzen</h4>
+            <p>Nach jedem Training erhältst du Feedback von Teilnehmern und unserem Team – nutze es zur Weiterentwicklung.</p>
+          </div></li>
+        </ol>
+      </div>
+
+      <div class="lh-card">
+        <div class="lh-tag">Phase 4</div>
+        <h3>Nach dem Training</h3>
+        <ol class="lh-steps">
+          <li><div class="lh-step-content">
+            <h4>Anwesenheitsliste & Feedback einsenden</h4>
+            <p>Schick die Anwesenheitsliste (wer war tatsächlich dabei) und das Feedback-Formular an <a href="mailto:support@lotaro.de" style="color:var(--green-dark); font-weight:600;">support@lotaro.de</a> – dort erreichst du Adela.</p>
+          </div></li>
+          <li><div class="lh-step-content">
+            <h4>Rechnung stellen</h4>
+            <p>Sende deine Rechnung mit dem vereinbarten Honorar. Auszahlung erfolgt alle 14 Tage.</p>
+          </div></li>
+          <li><div class="lh-step-content">
+            <h4>Retro mit Mario</h4>
+            <p>Nach deinem ersten Training laden wir dich zu einer kurzen Retro ein – Mario meldet sich bei dir. Du musst dafür nichts vorbereiten.</p>
+          </div></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ═══ RICHTLINIEN ═══ -->
+    <div id="lh-richtlinien" class="lh-section">
+      <div class="lh-intro">
+        <h2>Trainer-Richtlinien 📋</h2>
+        <p>Diese Richtlinien bilden die Grundlage unserer Zusammenarbeit. Kurz, klar – und im Sinne einer guten Partnerschaft.</p>
+      </div>
+
+      <div class="lh-richtlinie">
+        <h4>🎯 Qualität & Vorbereitung</h4>
+        <p>Du bereitest deine Trainings sorgfältig vor und lieferst professionelle Inhalte, die den Erwartungen der Teilnehmer entsprechen.</p>
+      </div>
+      <div class="lh-richtlinie">
+        <h4>💻 Technische Anforderungen</h4>
+        <p>Du verfügst über eine stabile Internetverbindung, gute Bild- und Tonqualität sowie einen Zoom Pro Account. Die Einstellung "Allow participants to join via browser" ist aktiviert.</p>
+      </div>
+      <div class="lh-richtlinie">
+        <h4>⏰ Zuverlässigkeit & Pünktlichkeit</h4>
+        <p>Du hältst vereinbarte Termine ein. Bei Verhinderung gibst du uns so früh wie möglich Bescheid, damit wir reagieren können.</p>
+      </div>
+      <div class="lh-richtlinie">
+        <h4>🤝 Kommunikation läuft über LOTARO</h4>
+        <p>Die direkte Kontaktaufnahme mit Teilnehmern außerhalb des Trainings erfolgt ausschließlich über LOTARO. Du bietest Teilnehmern keine direkten Buchungen oder Leistungen an, die LOTARO umgehen.</p>
+      </div>
+      <div class="lh-richtlinie">
+        <h4>🔒 Vertraulichkeit</h4>
+        <p>Informationen über Kunden, Teilnehmer und interne Abläufe behandelst du vertraulich und gibst sie nicht an Dritte weiter.</p>
+      </div>
+      <div class="lh-richtlinie">
+        <h4>💬 Feedback & Weiterentwicklung</h4>
+        <p>Du nimmst Teilnehmerfeedback und Anmerkungen unseres Teams konstruktiv an und nutzt sie zur kontinuierlichen Verbesserung.</p>
+      </div>
+      <div class="lh-richtlinie">
+        <h4>👥 Mindestteilnehmerzahl & Stornierung</h4>
+        <p>Die meisten Trainings benötigen mindestens <strong>4 Teilnehmer</strong>. Wird diese Zahl nicht erreicht, entscheiden wir gemeinsam – in der Regel 1–2 Wochen vorher – ob das Training stattfindet, verschoben oder abgesagt wird. Trainings, die nicht stattfinden, können nicht abgerechnet werden.</p>
+      </div>
+      <div class="lh-richtlinie">
+        <h4>📄 Abrechnung</h4>
+        <p>Du stellst Rechnungen mit dem vereinbarten Honorar nach erfolgreich abgehaltenem Training. Auszahlung erfolgt alle 14 Tage nach Rechnungseingang.</p>
+      </div>
+      <div class="lh-richtlinie">
+        <h4>🌱 Werte & Auftreten</h4>
+        <p>Du repräsentierst LOTARO mit Professionalität, Respekt und Begeisterung. Unser gemeinsames Ziel: best-in-class Trainings für alle zugänglich machen.</p>
+      </div>
+
+      <!-- WEBFLOW FORM -->
+      <div class="lh-confirm-box" id="lhConfirmBox">
+        <h3>Richtlinien bestätigen</h3>
+        <p>Bitte fülle das Formular aus und bestätige, dass du die Richtlinien gelesen hast.</p>
+
+        <!-- 
+          WEBFLOW ANLEITUNG:
+          Ersetze dieses <form>-Tag mit einem nativen Webflow Form-Element.
+          Stelle sicher dass das Formular an support@lotaro.de gesendet wird.
+          Die Input-IDs "lhName" und "lhEmail" müssen erhalten bleiben.
+        -->
+        <form id="lhForm" onsubmit="lhSubmit(event)">
+          <div class="lh-input-grid">
+            <div class="lh-field">
+              <label for="lhName">Vorname & Nachname *</label>
+              <input type="text" id="lhName" name="name" placeholder="Max Mustermann" oninput="lhUpdateBtn()" required>
+            </div>
+            <div class="lh-field">
+              <label for="lhEmail">E-Mail Adresse *</label>
+              <input type="email" id="lhEmail" name="email" placeholder="max@beispiel.de" oninput="lhUpdateBtn()" required>
+            </div>
+          </div>
+
+          <div class="lh-checkbox-row">
+            <input type="checkbox" id="lhCheck1" name="check1" onchange="lhUpdateBtn()">
+            <label for="lhCheck1">Ich habe die Trainer-Richtlinien von LOTARO gelesen und verstanden.</label>
+          </div>
+          <div class="lh-checkbox-row">
+            <input type="checkbox" id="lhCheck2" name="check2" onchange="lhUpdateBtn()">
+            <label for="lhCheck2">Ich stimme zu, die Richtlinien in meiner Tätigkeit als LOTARO-Trainer einzuhalten.</label>
+          </div>
+
+          <button type="submit" class="lh-btn" id="lhConfirmBtn" disabled>
+            ✓ Richtlinien bestätigen
+          </button>
+        </form>
+      </div>
+
+      <div class="lh-success" id="lhSuccess">
+        <div class="lh-check">✅</div>
+        <h3>Alles klar, danke!</h3>
+        <p>Du hast die Richtlinien bestätigt. Wir freuen uns auf die Zusammenarbeit mit dir!</p>
+      </div>
+    </div>
+
+    <!-- ═══ FAQ ═══ -->
+    <div id="lh-faq" class="lh-section">
+      <div class="lh-intro">
+        <h2>Häufige Fragen ❓</h2>
+        <p>Die wichtigsten Antworten auf einen Blick.</p>
+      </div>
+
+      <div class="lh-card">
+        <h3 style="margin-bottom:8px; color:var(--green-dark)">Allgemein</h3>
+        <div class="lh-faq-item">
+          <button class="lh-faq-q" onclick="lhFaq(this)">Wie läuft die Zusammenarbeit ab? <span class="lh-faq-arrow">▼</span></button>
+          <div class="lh-faq-a">Unsere Trainer arbeiten auf selbstständiger Basis und stellen nach jeder erbrachten Leistung eine Rechnung. Es gibt keine festen Verträge – du arbeitest flexibel nach Bedarf.</div>
+        </div>
+        <div class="lh-faq-item">
+          <button class="lh-faq-q" onclick="lhFaq(this)">Gibt es eine Mindestanzahl an Trainings? <span class="lh-faq-arrow">▼</span></button>
+          <div class="lh-faq-a">Nein. Du kannst flexibel entscheiden, wie viele Trainings du übernimmst. Eine gewisse Regelmäßigkeit ist allerdings erwünscht.</div>
+        </div>
+        <div class="lh-faq-item">
+          <button class="lh-faq-q" onclick="lhFaq(this)">Wie erhalte ich Feedback? <span class="lh-faq-arrow">▼</span></button>
+          <div class="lh-faq-a">Nach jedem Training erhältst du Feedback von Teilnehmern und unserem Team – mit dem Ziel, die Qualität stetig zu verbessern.</div>
+        </div>
+        <div class="lh-faq-item" style="border-bottom:none;">
+          <button class="lh-faq-q" onclick="lhFaq(this)">Wie funktioniert die Bezahlung? <span class="lh-faq-arrow">▼</span></button>
+          <div class="lh-faq-a">Nach erfolgreichem Abschluss eines Trainings sendest du uns deine Rechnung mit dem vereinbarten Honorar. Die Auszahlung erfolgt alle 14 Tage.</div>
+        </div>
+      </div>
+
+      <div class="lh-card">
+        <h3 style="margin-bottom:8px; color:var(--green-dark)">🎥 Zoom Setup – Schritt für Schritt</h3>
+        <p style="font-size:14px; color:var(--text-muted); margin-bottom:16px;">Du nutzt bei LOTARO immer deinen <strong>persönlichen, wiederkehrenden Zoom-Link</strong> (Personal Meeting Room). So müssen wir keinen neuen Link für jedes Training erstellen.</p>
+
+        <div class="lh-faq-item">
+          <button class="lh-faq-q" onclick="lhFaq(this)">Wie richte ich meinen persönlichen Zoom-Raum ein? <span class="lh-faq-arrow">▼</span></button>
+          <div class="lh-faq-a">
+            <ol style="padding-left:18px; line-height:2;">
+              <li>Öffne <strong>zoom.us</strong> im Browser und logge dich ein</li>
+              <li>Gehe zu <strong>Profile</strong> → du siehst deine <strong>Personal Meeting ID</strong> (z.B. 123 456 7890)</li>
+              <li>Klicke auf <strong>Edit</strong> neben "Personal Meeting ID"</li>
+              <li>Setze einen <strong>festen Passcode</strong> (den du dir merkst)</li>
+              <li>Aktiviere <strong>"Allow participants to join anytime"</strong> – so können Teilnehmer auch ohne dich schon beitreten</li>
+              <li>Speichern – fertig!</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="lh-faq-item">
+          <button class="lh-faq-q" onclick="lhFaq(this)">Wie deaktiviere ich das Passwort beim Beitreten? <span class="lh-faq-arrow">▼</span></button>
+          <div class="lh-faq-a">
+            Damit Teilnehmer ohne Passwort-Eingabe beitreten können, musst du den Passcode in den Link einbetten:<br><br>
+            <ol style="padding-left:18px; line-height:2;">
+              <li>Gehe zu <strong>zoom.us → Settings → Meeting</strong></li>
+              <li>Suche nach <strong>"Embed passcode in invite link"</strong></li>
+              <li>Aktiviere diese Option ✅</li>
+              <li>Dein Einladungslink enthält dann automatisch den Passcode – Teilnehmer kommen ohne Eingabe rein</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="lh-faq-item">
+          <button class="lh-faq-q" onclick="lhFaq(this)">Wo finde ich meine Meeting-ID und mein Kennwort? <span class="lh-faq-arrow">▼</span></button>
+          <div class="lh-faq-a">
+            <ol style="padding-left:18px; line-height:2;">
+              <li>Öffne <strong>zoom.us</strong> → <strong>Profile</strong></li>
+              <li>Deine <strong>Personal Meeting ID</strong> steht direkt unter deinem Namen</li>
+              <li>Das <strong>Kennwort (Passcode)</strong> findest du unter Profile → Personal Meeting ID → Edit</li>
+            </ol>
+            <br>Bitte schicke beides an <a href="mailto:mario.werdich@lotaro.de" style="color:var(--green-dark); font-weight:600;">mario.werdich@lotaro.de</a> – wir brauchen ID und Kennwort, um es in die Trainingseinladungen einzutragen.
+          </div>
+        </div>
+
+        <div class="lh-faq-item">
+          <button class="lh-faq-q" onclick="lhFaq(this)">Wie aktiviere ich "Allow participants to join via browser"? <span class="lh-faq-arrow">▼</span></button>
+          <div class="lh-faq-a">
+            Manche Unternehmenskunden können die Zoom-App nicht installieren. Mit dieser Einstellung können sie direkt im Browser teilnehmen:<br><br>
+            <ol style="padding-left:18px; line-height:2;">
+              <li>Gehe zu <strong>zoom.us → Settings → Meeting</strong></li>
+              <li>Suche nach <strong>"Show a "Join from your browser" link"</strong></li>
+              <li>Aktiviere die Option ✅</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="lh-faq-item" style="border-bottom:none;">
+          <button class="lh-faq-q" onclick="lhFaq(this)">Was brauche ich technisch noch? <span class="lh-faq-arrow">▼</span></button>
+          <div class="lh-faq-a">
+            <ul style="padding-left:18px; line-height:2;">
+              <li>Zoom <strong>Pro Account</strong> (kein Free Account – der hat 40-Minuten-Limit)</li>
+              <li>Stabile <strong>Internetverbindung</strong></li>
+              <li>Gute <strong>Bild- und Tonqualität</strong> (Kamera und Mikrofon testen)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TRAINER-KARTE ═══ -->
+    <div id="lh-karte" class="lh-section">
+      <div class="lh-intro">
+        <h2>Trainer-Karte 📍</h2>
+        <p>Alle LOTARO-Trainer auf einen Blick – trag dich ein, falls du noch nicht drauf bist.</p>
+      </div>
+      <div class="lh-card" style="padding:0; overflow:hidden;">
+        <iframe
+          src="https://lotaro-trainings.github.io/trainer-map/"
+          style="width:100%; height:600px; border:none; display:block;"
+          title="LOTARO Trainer-Karte"
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+
+    <!-- ═══ KONTAKT ═══ -->
+    <div id="lh-fragen" class="lh-section">
+      <div class="lh-intro">
+        <h2>Kontakt & Kommunikation 📬</h2>
+        <p>Kurzer Überblick – wer ist wofür zuständig und wie erreichst du uns am schnellsten.</p>
+      </div>
+
+      <div class="lh-card">
+        <div class="lh-card-header">
+          <span style="font-size:22px;">📋</span>
+          <h2>Wer ist wofür zuständig?</h2>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+
+          <div style="display:flex; gap:16px; align-items:flex-start; padding:16px; background:var(--bg); border-radius:10px;">
+            <div style="font-size:28px; flex-shrink:0;">📝</div>
+            <div>
+              <div style="font-weight:600; font-size:15px; margin-bottom:4px;">Anwesenheitsliste & Feedback</div>
+              <div style="font-size:14px; color:var(--text-muted); margin-bottom:8px;">Nach jedem Training schickst du die Anwesenheitsliste und das Feedback an Adela.</div>
+              <a href="mailto:support@lotaro.de" style="display:inline-block; background:var(--green-dark); color:white; text-decoration:none; padding:8px 18px; border-radius:7px; font-size:13px; font-weight:600;">✉️ support@lotaro.de</a>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:16px; align-items:flex-start; padding:16px; background:var(--bg); border-radius:10px;">
+            <div style="font-size:28px; flex-shrink:0;">💬</div>
+            <div>
+              <div style="font-weight:600; font-size:15px; margin-bottom:4px;">Inhaltliche Fragen, Feedback-Austausch, allgemeine Anliegen</div>
+              <div style="font-size:14px; color:var(--text-muted); margin-bottom:8px;">Für alles rund um Trainings, Inhalte oder die Zusammenarbeit ist Mario dein Ansprechpartner.</div>
+              <a href="mailto:mario.werdich@lotaro.de" style="display:inline-block; background:var(--green-dark); color:white; text-decoration:none; padding:8px 18px; border-radius:7px; font-size:13px; font-weight:600;">✉️ mario.werdich@lotaro.de</a>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:16px; align-items:flex-start; padding:16px; background:#fff8e1; border:1.5px solid #f0c040; border-radius:10px;">
+            <div style="font-size:28px; flex-shrink:0;">🚨</div>
+            <div>
+              <div style="font-weight:600; font-size:15px; margin-bottom:4px;">Trainingsausfall (Krankheit, Notfall)</div>
+              <div style="font-size:14px; color:var(--text-muted); margin-bottom:8px;">Bitte <strong>beide</strong> Adressen so früh wie möglich informieren.</div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <a href="mailto:support@lotaro.de" style="display:inline-block; background:var(--green-dark); color:white; text-decoration:none; padding:8px 18px; border-radius:7px; font-size:13px; font-weight:600;">✉️ support@lotaro.de</a>
+                <a href="mailto:mario.werdich@lotaro.de" style="display:inline-block; background:var(--green-dark); color:white; text-decoration:none; padding:8px 18px; border-radius:7px; font-size:13px; font-weight:600;">✉️ mario.werdich@lotaro.de</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="lh-card">
+        <div class="lh-card-header">
+          <span style="font-size:22px;">💬</span>
+          <h2>Schneller Austausch – WhatsApp</h2>
+        </div>
+        <p>Für schnelle Fragen und Updates gibt es die Trainer-Community auf WhatsApp. Dort sind auch andere Trainer – oft hat jemand die gleiche Frage schon beantwortet.</p>
+        <a class="lh-cta-secondary" href="https://chat.whatsapp.com/EsAAAfsohvEHPBkT59INZ1" target="_blank">
+          💬 WhatsApp Community beitreten →
+        </a>
+      </div>
+    </div>
+
+  </div><!-- end lh-main -->
+</div><!-- end lotaro-hub -->
+
+<script>
+  function lhTab(id, el) {
+    document.querySelectorAll('#lotaro-hub .lh-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('#lotaro-hub .lh-nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById('lh-' + id).classList.add('active');
+    el.classList.add('active');
+    document.getElementById('lotaro-hub').scrollIntoView({behavior: 'smooth'});
+  }
+
+  function lhFaq(btn) {
+    const answer = btn.nextElementSibling;
+    const arrow = btn.querySelector('.lh-faq-arrow');
+    answer.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+
+  
+    const c1 = document.getElementById('lhCheck1').checked;
+    const c2 = document.getElementById('lhCheck2').checked;
+    const name = document.getElementById('lhName').value.trim();
+    const email = document.getElementById('lhEmail').value.trim();
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    document.getElementById('lhConfirmBtn').disabled = !(c1 && c2 && name && emailOk);
+  }
+
+  function lhSubmit(e) {
+    e.preventDefault();
+    // Webflow übernimmt das Absenden – diese Funktion zeigt nur die Erfolgsmeldung
+    document.getElementById('lhConfirmBox').style.display = 'none';
+    document.getElementById('lhSuccess').style.display = 'block';
+  }
+</script>
+</body>
+</html>
