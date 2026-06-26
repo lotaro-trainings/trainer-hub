@@ -519,48 +519,13 @@
         <p>Du repräsentierst LOTARO mit Professionalität, Respekt und Begeisterung. Unser gemeinsames Ziel: best-in-class Trainings für alle zugänglich machen.</p>
       </div>
 
-      <!-- WEBFLOW FORM -->
+      <!-- GOOGLE FORM BUTTON -->
       <div class="lh-confirm-box" id="lhConfirmBox">
         <h3>Richtlinien bestätigen</h3>
-        <p>Bitte fülle das Formular aus und bestätige, dass du die Richtlinien gelesen hast.</p>
-
-        <!-- 
-          WEBFLOW ANLEITUNG:
-          Ersetze dieses <form>-Tag mit einem nativen Webflow Form-Element.
-          Stelle sicher dass das Formular an support@lotaro.de gesendet wird.
-          Die Input-IDs "lhName" und "lhEmail" müssen erhalten bleiben.
-        -->
-        <form id="lhForm" onsubmit="lhSubmit(event)">
-          <div class="lh-input-grid">
-            <div class="lh-field">
-              <label for="lhName">Vorname & Nachname *</label>
-              <input type="text" id="lhName" name="name" placeholder="Max Mustermann" oninput="lhUpdateBtn()" required>
-            </div>
-            <div class="lh-field">
-              <label for="lhEmail">E-Mail Adresse *</label>
-              <input type="email" id="lhEmail" name="email" placeholder="max@beispiel.de" oninput="lhUpdateBtn()" required>
-            </div>
-          </div>
-
-          <div class="lh-checkbox-row">
-            <input type="checkbox" id="lhCheck1" name="check1" onchange="lhUpdateBtn()">
-            <label for="lhCheck1">Ich habe die Trainer-Richtlinien von LOTARO gelesen und verstanden.</label>
-          </div>
-          <div class="lh-checkbox-row">
-            <input type="checkbox" id="lhCheck2" name="check2" onchange="lhUpdateBtn()">
-            <label for="lhCheck2">Ich stimme zu, die Richtlinien in meiner Tätigkeit als LOTARO-Trainer einzuhalten.</label>
-          </div>
-
-          <button type="submit" class="lh-btn" id="lhConfirmBtn" disabled>
-            ✓ Richtlinien bestätigen
-          </button>
-        </form>
-      </div>
-
-      <div class="lh-success" id="lhSuccess">
-        <div class="lh-check">✅</div>
-        <h3>Alles klar, danke!</h3>
-        <p>Du hast die Richtlinien bestätigt. Wir freuen uns auf die Zusammenarbeit mit dir!</p>
+        <p>Du hast die Richtlinien gelesen? Dann bestätige sie jetzt mit einem Klick – es dauert nur eine Minute.</p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScuD2i3DG7jMJh85wtUmJlrBOt-31ha_JCL-eDuX0M-Usq0Eg/viewform" target="_blank" class="lh-btn" style="display:inline-block; text-decoration:none; padding:14px 36px; margin-top:8px;">
+          ✓ Richtlinien jetzt bestätigen →
+        </a>
       </div>
     </div>
 
@@ -758,21 +723,6 @@
     var arrow = btn.querySelector('.lh-faq-arrow');
     answer.classList.toggle('open');
     arrow.classList.toggle('open');
-  }
-
-  function lhUpdateBtn() {
-    var c1 = document.getElementById('lhCheck1').checked;
-    var c2 = document.getElementById('lhCheck2').checked;
-    var name = document.getElementById('lhName').value.trim();
-    var email = document.getElementById('lhEmail').value.trim();
-    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    document.getElementById('lhConfirmBtn').disabled = !(c1 && c2 && name && emailOk);
-  }
-
-  function lhSubmit(e) {
-    e.preventDefault();
-    document.getElementById('lhConfirmBox').style.display = 'none';
-    document.getElementById('lhSuccess').style.display = 'block';
   }
 </script>
 </body>
